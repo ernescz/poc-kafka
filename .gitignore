@@ -1,3 +1,7 @@
 # vagrant data
 .vagrant
 *.log
+
+# python venvs
+*venv/
+conf/

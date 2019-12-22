@@ -36,6 +36,9 @@ check_requirements: 	## Checks for system compatibility (vagrant version, networ
 		Current version: ${VBOX_VERSION} -> Vagrant v2.2.6 does not support virtualbox v6.1" ; \
 	fi 
 
+install_addons: ## Installs addons for vbox
+	@vagrant plugin install vagrant-vbguest
+	
 init:		## Deploys vagrant machines from the Vagrantfile
 	@echo "${GRN}Launching vagrant...${NC}" 
 	@vagrant up 
