@@ -1,0 +1,82 @@
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+	"strconv"
+	"time"
+
+	"github.com/Shopify/sarama"
+)
+
+// Stays up until killed:
+func main() {
+	done := make(chan bool)
+	go publishMessage()
+	<-done
+
+}
+
+// Publish the message to a Kafka topic:
+func publishMessage() {
+	// Configurations settings:
+	config := sarama.NewConfig()
+	config.Producer.RequiredAcks = sarama.WaitForAll
+	config.Producer.Retry.Max = 5
+	config.Producer.Return.Successes = true
+	config.ClientID = "theProducer"
+
+	// Verbose logging:
+	sarama.Logger = log.New(os.Stdout, "[sarama] ", log.LstdFlags)
+
+	// List of brokers to connect to.
+	// NB! This will not be used directly, will use returned values from this broker:
+	brokers := []string{"192.168.100.10:9092"}
+	// Set topic here:
+	topic := "input"
+
+	producer, err := sarama.NewSyncProducer(brokers, config)
+	if err != nil {
+		// Should not reach here
+		panic(err)
+	}
+
+	defer func() {
+		if err := producer.Close(); err != nil {
+			// Should not reach here
+			panic(err)
+		}
+	}()
+
+	for {
+		// Prepare the message via unixTS function:
+		msg := &sarama.ProducerMessage{
+			Topic: topic,
+			Value: sarama.StringEncoder(unixTS()),
+		}
+
+		// Send the message itself:
+		partition, offset, err := producer.SendMessage(msg)
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Printf("Message is stored in topic(%s)/partition(%d)/offset(%d)\n", topic, partition, offset)
+	}
+}
+
+// Gets the current Unix timestamp in milliseconds and returns it in a string
+func unixTS() string {
+	// Unix has only Nano seconds:
+	TsCurrentNano := time.Now().UnixNano() / int64(time.Millisecond)
+
+	// Kafka has issues displaying int64 as a message:
+	TsCurrentString := strconv.FormatInt(TsCurrentNano, 10)
+
+	// Slow down to a seconds.
+	// If need other timeframe define "dealaySeconds" and set to int value as in example:
+	// time.Sleep(time.Second * time.Duration(delaySeconds))
+	time.Sleep(time.Second)
+	return TsCurrentString
+}
