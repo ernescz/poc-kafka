@@ -8,6 +8,7 @@ Vagrant.configure("2") do |config|
       kafka_config.vm.box = "centos/7"
       kafka_config.vm.hostname = "kafka"
       kafka_config.vm.network :private_network, ip: "192.168.100.10"
+      kafka_config.vm.network "forwarded_port", guest: 80, host: 8088
       # kafka_config.vm.synced_folder ".", "/vagrant", type: "rsync",
       #   rsync__exclude: ".git/"
       kafka_config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
