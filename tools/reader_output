@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+KAFKA_PATH="/home/kafka/kafka/bin"
+
+${KAFKA_PATH}/kafka-console-consumer.sh \
+    --bootstrap-server localhost:9092 \
+    --topic output \
+    --from-beginning
+
