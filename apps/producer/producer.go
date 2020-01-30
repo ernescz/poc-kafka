@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/Shopify/sarama"
+	"github.com/quipo/statsd"
 )
 
 // Stays up until killed:
@@ -36,6 +37,21 @@ func publishMessage() {
 	// Set topic here:
 	topic := "input"
 
+	// statsd initialization:
+	prefix := "producer."
+	statsdclient := statsd.NewStatsdClient("192.168.100.10:9125", prefix)
+	statsdErr := statsdclient.CreateSocket()
+
+	if statsdErr != nil {
+		// Should not reach here
+		log.Println(statsdErr)
+		// os.Exit(1)
+	}
+
+	stats := statsd.NewStatsdBuffer(1, statsdclient)
+	defer stats.Close()
+
+	// producer initialization
 	producer, err := sarama.NewSyncProducer(brokers, config)
 	if err != nil {
 		// Should not reach here
@@ -63,6 +79,10 @@ func publishMessage() {
 		}
 
 		fmt.Printf("Message is stored in topic(%s)/partition(%d)/offset(%d)\n", topic, partition, offset)
+
+		// Increment the metric of sent messages:
+		statsdclient.Incr("messages", 1)
+
 	}
 }
 

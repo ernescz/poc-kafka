@@ -3,6 +3,7 @@ from kafka import KafkaProducer
 from daemonize import Daemonize
 from json import loads
 from json import dumps
+import statsd
 import datetime as d
 import time as t 
 
@@ -29,6 +30,9 @@ def UnixConverter():
       dumps(x, default=str).encode('utf-8')
     )
 
+  # statsd connectors for pushing app metrics:
+  statsd_cli = statsd.StatsClient('192.168.100.10', 9125, prefix="consumer")
+
   # Process the messages in topic:
   for message in consumer:
     # Decode the message from stream bytes, set type to int and convert to ISO:
@@ -37,10 +41,14 @@ def UnixConverter():
     unix_seconds = int(message_int / 1000)
     iso_date = d.datetime.fromtimestamp(unix_seconds)
     print('Got the value of {}'.format(iso_date))
+    # Increment stats with the number of consumed messages (consumer_consumed_unix):
+    statsd_cli.incr("consumed_unix")
 
     # Send the result to the 'output' topic, throtle the loop by "time_delay":
     producer.send('output', iso_date)
     t.sleep(time_delay)
+    # Increment stats with the number of produced messages (consumer_produced_iso);
+    statsd_cli.incr("produced_iso")
 
 
 # Start and daemonize the app:
