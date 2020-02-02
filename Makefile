@@ -13,11 +13,11 @@ help: ## Print this help
 
 check_requirements: 	## Checks for system compatibility (vagrant version, networking)
 	$(eval VAGRANT_VERSION := $(shell vagrant version | grep -i installed | awk '{print $$3}'))
-	@if [ "${VAGRANT_VERSION}" == "2.2.6" ]; then \
-		echo "${GRN}[OK]${NC} vagrant version = 2.2.6" ; \
+	@if [ "${VAGRANT_VERSION}" == "2.2.7" ]; then \
+		echo "${GRN}[OK]${NC} vagrant version = 2.2.7" ; \
 	else \
-		echo "${RED}[FAIL]${NC} could not find vagrant with version 2.2.6. \n \
-		Current version: ${VAGRANT_VERSION} \nPlease setup version 2.2.6" ; \
+		echo "${RED}[FAIL]${NC} could not find vagrant with version 2.2.7. \n \
+		Current version: ${VAGRANT_VERSION} \nPlease setup version 2.2.7" ; \
 	fi 
 
 	$(eval NET_ACCESS := $(shell curl -s -f -I  https://dl.fedoraproject.org/pub/epel > /dev/null; echo $$?))
@@ -29,11 +29,11 @@ check_requirements: 	## Checks for system compatibility (vagrant version, networ
 	fi 
 
 	$(eval VBOX_VERSION := $(shell VBoxManage --version | cut -c 1-3))
-	@if [ "${VBOX_VERSION}" == "6.0" ]; then \
+	@if [ "${VBOX_VERSION}" == "6.1" ]; then \
 		echo "${GRN}[OK]${NC} virtualbox version = ${VBOX_VERSION}" ; \
 	else \
-		echo "${RED}[FAIL]${NC} virtualbox version 6.0 required \n \
-		Current version: ${VBOX_VERSION} -> Vagrant v2.2.6 does not support virtualbox v6.1" ; \
+		echo "${RED}[FAIL]${NC} virtualbox version 6.1 required \n \
+		Current version: ${VBOX_VERSION} -> Please note Vagrant v2.2.6 does not support virtualbox v6.1" ; \
 	fi 
 
 install_addons: ## Installs addons for vbox
