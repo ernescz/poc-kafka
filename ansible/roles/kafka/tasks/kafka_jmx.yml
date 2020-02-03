@@ -1,0 +1,21 @@
+---
+## JMX is used to expose Kafka (or any Java process metrics to Prometheus)
+# Upload the JMX file to the server (due to small size we can check it in version control):
+- name: Kafka | JMX agent file upload
+  copy:
+    dest: "{{ kafka_base_directory }}/libs/jmx_prometheus_javaagent-{{ kafka_jmx_version }}.jar"
+    src: "files/jmx_prometheus_javaagent-{{ kafka_jmx_version }}.jar"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0644
+    
+# JMX agent main config file:
+- name: Kafka | JMX config
+  template:
+    dest: "{{ kafka_config_directory }}/jmx_config.yml"
+    src: "home/kafka/kafka/config/jmx_config.yml.j2"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0644
+  notify: 
+    - restart kafka

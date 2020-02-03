@@ -1,5 +1,10 @@
-{%- set base_dir = kafka_base_directory -%}
-{%- set log_dir = kafka_log_directory -%}
+{%- set base_dir  = kafka_base_directory -%}
+{%- set log_dir   = kafka_log_directory -%}
+{%- set conf_dir  = kafka_config_directory -%}
+{%- set bin_dir   = kafka_binary_directory -%}
+{%- set lib_dir   = kafka_libs_directory -%}
+{%- set jmx_vers  = "jmx_prometheus_javaagent-" + kafka_jmx_version + ".jar" -%}
+{%- set jmx_port  = kafka_jmx_port -%}
 ##
 ## Kafka service (/etc/systemd/system/kafka.service)
 ##
@@ -14,8 +19,17 @@ After=zookeeper.service
 [Service]
 Type=simple
 User=kafka
-ExecStart=/bin/sh -c '{{ base_dir }}/bin/kafka-server-start.sh {{ base_dir }}/config/server.properties > {{ log_dir }}/kafka.log 2>&1'
-#ExecStart=/bin/sh -c 'KAFKA_OPTS="$KAFKA_OPTS -javaagent:/tmp/jmx_prometheus_javaagent-0.9.jar=7071:/tmp/kafka-0-8-2.yaml" {{ base_dir }}/bin/kafka-server-start.sh {{ base_dir }}/config/server.properties > {{ log_dir }}/kafka.log 2>&1'
+{% if kafka_jmx_disabled == True -%}
+ExecStart=/bin/sh -c '{{ bin_dir }}/kafka-server-start.sh \
+                      {{ conf_dir }}/server.properties > \
+                      {{ log_dir }}/kafka.log 2>&1'
+{% else -%}
+ExecStart=/bin/sh -c 'KAFKA_OPTS="$KAFKA_OPTS \
+                      -javaagent:{{ lib_dir }}/{{ jmx_vers }}={{ jmx_port }}:{{ conf_dir }}/jmx_config.yml" \
+                      {{ bin_dir }}/kafka-server-start.sh \
+                      {{ conf_dir }}/server.properties > \
+                      {{ log_dir }}/kafka.log 2>&1'
+{% endif -%}
 
 ExecStop={{ base_dir }}/bin/kafka-server-stop.sh
 Restart=on-failure

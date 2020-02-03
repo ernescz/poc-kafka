@@ -13,3 +13,4 @@
     name: kafka
     enabled: True
     state: restarted
+    daemon_reload: True
