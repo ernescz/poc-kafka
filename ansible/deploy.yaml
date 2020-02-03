@@ -6,6 +6,4 @@
   gather_facts: False
   roles:
     - role: bootstrap
-    # - role: users
-    #   user_set:
-    #    - eknavins # admin
+    - role: kafka

@@ -1,0 +1,39 @@
+---
+# Install dependencies:
+- name: Kafka | install deps 
+  yum:
+    name: "{{ kafka_dependencies }}" 
+    state: present
+
+# Download Kafka software:
+- name: Kafka | download files
+  get_url:
+    url: "{{ kafka_dl_url }}/{{ kafka_version }}.tgz"
+    dest: "/tmp/{{ kafka_version }}.tgz"
+    mode: "0440"
+  # Source server sometimes drops the connection, do retries:
+  register: download_result
+  retries: 6
+  delay: 10
+  until: download_result is not failed
+
+# Extract to Kafka directory:
+- name: Kafka | extracting Kafka
+  unarchive:
+    src: "/tmp/{{ kafka_version }}.tgz"
+    dest: "{{ kafka_home_directory }}"
+    creates: "{{ kafka_home_directory }}/{{ kafka_version }}"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    remote_src: True
+    # this parameter fails (needs investigation)
+    # extra_opts:
+    #   - -C {{ kafka_base_directory }}
+    #   - --strip 1
+
+# Symlink to current version:
+- name: Kafka | current version symlink
+  file:
+    state: link
+    src: "{{ kafka_home_directory }}/{{ kafka_version }}"
+    path: "{{ kafka_base_directory }}"

@@ -1,0 +1,23 @@
+---
+# Locations for Kafka
+kafka_home_directory: "/home/kafka"
+kafka_base_directory: "/home/kafka/kafka"
+kafka_config_directory: "/home/kafka/kafka/config"
+kafka_log_directory: "/var/log/kafka"
+
+# Pre-requirements:
+kafka_dependencies:
+  - java-latest-openjdk
+
+# Kafka username:
+kafka_user: "kafka"
+kafka_group: "kafka"
+
+# Kafka download URL and version:
+kafka_dl_url: "https://www.apache.org/dist/kafka/2.4.0/"
+kafka_version: "kafka_2.13-2.4.0"
+
+# service locations:
+systemd_confdir: "/etc/systemd/system"
+
+# JMX
