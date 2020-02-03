@@ -1,0 +1,15 @@
+---
+# Zookeeper service
+- name: restart zookeeper
+  systemd:
+    name: zookeeper
+    enabled: True
+    state: restarted
+    daemon_reload: True
+
+# Kafka service
+- name: restart kafka
+  systemd:
+    name: kafka
+    enabled: True
+    state: restarted

@@ -1,0 +1,15 @@
+---
+# Create Kafka group:
+- name: Kafka | create group
+  group:
+    name: "{{ kafka_group }}"
+
+# Create Kafka user:
+- name: Kafka | create user
+  user:
+    name: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    comment: "Default user for Kafka service"
+    home: "{{ kafka_home_directory }}"
+    append: True
+    groups: wheel 

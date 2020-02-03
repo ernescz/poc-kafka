@@ -1,0 +1,24 @@
+{%- set base_dir = kafka_base_directory -%}
+{%- set log_dir = kafka_log_directory -%}
+##
+## Kafka service (/etc/systemd/system/kafka.service)
+##
+## Warning! This file is beeing auto-managed
+## Any manual changes can and will be overwritten!
+##
+
+[Unit]
+Requires=zookeeper.service
+After=zookeeper.service
+
+[Service]
+Type=simple
+User=kafka
+ExecStart=/bin/sh -c '{{ base_dir }}/bin/kafka-server-start.sh {{ base_dir }}/config/server.properties > {{ log_dir }}/kafka.log 2>&1'
+#ExecStart=/bin/sh -c 'KAFKA_OPTS="$KAFKA_OPTS -javaagent:/tmp/jmx_prometheus_javaagent-0.9.jar=7071:/tmp/kafka-0-8-2.yaml" {{ base_dir }}/bin/kafka-server-start.sh {{ base_dir }}/config/server.properties > {{ log_dir }}/kafka.log 2>&1'
+
+ExecStop={{ base_dir }}/bin/kafka-server-stop.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

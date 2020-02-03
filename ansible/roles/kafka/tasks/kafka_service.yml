@@ -1,0 +1,52 @@
+---
+# Create log directory and set correct owner:
+- name: Kafka | Zookeeper config directory
+  file:
+    path: "{{ kafka_config_directory }}"
+    state: directory
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0755
+
+# Create log directory and set correct owner:
+- name: Kafka | create log directory
+  file:
+    path: "{{ kafka_log_directory }}"
+    state: directory
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0770
+
+# Zookeeper systemd file:
+- name: Kafka | Zookeeper systemd file
+  template:
+    dest: "{{ systemd_confdir }}/zookeeper.service"
+    src: "etc/systemd/system/zookeeper.service.j2"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  notify: 
+    - restart zookeeper
+
+# Kafka systemd file:
+- name: Kafka | Zookeeper systemd file
+  template:
+    dest: "{{ systemd_confdir }}/kafka.service"
+    src: "etc/systemd/system/kafka.service.j2"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  notify: 
+    - restart kafka
+
+# Jinja template file for Zookeeper/Kafka main config:
+- name: Kafka | Zookeeper and Kafka config file
+  template:
+    dest: "{{ kafka_config_directory }}/server.properties"
+    src: "home/kafka/kafka/config/server.properties.j2"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0644
+  notify: 
+    - restart zookeeper
+    - restart kafka

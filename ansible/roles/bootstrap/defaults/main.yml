@@ -5,6 +5,7 @@ base_packages:
   - htop
   - net-tools
   - tree
+  - tmux
 
 # EPEL repo URL and GPG key for Centos 7.x:
 epel_repo_url: "https://download.fedoraproject.org/pub/epel/$releasever/$basearch/"

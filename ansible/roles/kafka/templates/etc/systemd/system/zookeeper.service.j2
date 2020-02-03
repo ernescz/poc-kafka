@@ -1,0 +1,21 @@
+{%- set base_dir = kafka_base_directory -%}
+##
+## zookeeper service (/etc/systemd/system/zookeeper.service)
+##
+## Warning! This file is beeing auto-managed
+## Any manual changes can and will be overwritten!
+##
+
+[Unit]
+Requires=network.target remote-fs.target
+After=network.target remote-fs.target
+
+[Service]
+Type=simple
+User=kafka
+ExecStart={{ base_dir }}/bin/zookeeper-server-start.sh {{ base_dir }}/config/zookeeper.properties
+ExecStop={{ base_dir }}/bin/zookeeper-server-stop.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
