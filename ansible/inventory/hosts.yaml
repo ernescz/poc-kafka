@@ -1,0 +1,12 @@
+apps:
+  hosts:
+    app-01: &app-01
+      ansible_host: '192.168.100.11'
+      ansible_ssh_private_key_file: ./.vagrant/machines/date_app/virtualbox/private_key
+
+all:
+  vars:
+    ansible_port: 22
+    ansible_user: vagrant
+    # ansible_ssh_private_key_file: ./.vagrant/machines/date_app/virtualbox/private_key
+
