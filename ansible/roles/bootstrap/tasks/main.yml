@@ -1,0 +1,20 @@
+---
+# Add EPEL repository:
+- name: Add EPEL repo
+  yum_repository:
+    name: epel
+    description: EPEL YUM repo
+    baseurl: "{{ epel_repo_url }}"
+
+# Add EPEL repo gpg key
+- name: Import EPEL GPG key
+  rpm_key:
+    key: "{{ epel_repo_gpg_key_url }}"
+    state: present
+
+# Installing base packages (from defaults/main.yml)
+- name: Install base packages
+  yum:
+    name: "{{ base_packages }}"
+    state: present
+

@@ -1,0 +1,11 @@
+---
+# Base packages:
+base_packages:
+  - vim 
+  - htop
+  - net-tools
+  - tree
+
+# EPEL repo URL and GPG key for Centos 7.x:
+epel_repo_url: "https://download.fedoraproject.org/pub/epel/$releasever/$basearch/"
+epel_repo_gpg_key_url: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7"
