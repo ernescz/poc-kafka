@@ -3,6 +3,8 @@
 kafka_home_directory: "/home/kafka"
 kafka_base_directory: "/home/kafka/kafka"
 kafka_config_directory: "/home/kafka/kafka/config"
+kafka_binary_directory: "/home/kafka/kafka/bin"
+kafka_libs_directory: "/home/kafka/kafka/libs"
 kafka_log_directory: "/var/log/kafka"
 
 # Pre-requirements:
@@ -20,4 +22,10 @@ kafka_version: "kafka_2.13-2.4.0"
 # service locations:
 systemd_confdir: "/etc/systemd/system"
 
-# JMX
+## JMX (JMX is a Prometheus exporter)
+# JMX is disabled by default:
+kafka_jmx_disabled: True
+# JMX version to utilize:
+kafka_jmx_version: "0.9"
+# JMX port on which metrics are exposed
+kafka_jmx_port: 7071
