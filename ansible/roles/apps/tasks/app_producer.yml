@@ -1,0 +1,39 @@
+---
+## Producer application
+# Create needed directory:
+- name: Apps | producer -> create bin directory
+  file:
+    path: "{{ app_producer_home }}/bin"
+    state: directory
+    owner: "{{ app_producer_user }}"
+    group: "{{ app_producer_group }}"
+    mode: 0755
+
+# Upload the producer binary:
+- name: Apps | producer -> upload binary
+  copy:
+    dest: "{{ app_producer_home }}/bin/producer"
+    src: "../../../apps/producer/bin/producer"
+    owner: "{{ app_producer_user }}"
+    group: "{{ app_producer_group }}"
+    mode: 0755
+  notify: 
+    - restart producer
+
+# Producer systemd service:
+- name: Apps | producer -> systemd file
+  template:
+    dest: "{{ systemd_confdir }}/producer.service"
+    src: "etc/systemd/system/producer.service.j2"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  notify: 
+    - restart producer
+
+# Make sure producer is running:
+- name: Apps | producer -> is running
+  systemd:
+    name: producer
+    state: started
+    daemon_reload: False

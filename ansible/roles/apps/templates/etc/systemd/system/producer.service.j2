@@ -1,0 +1,19 @@
+##
+## producer service (/etc/systemd/system/producer.service)
+##
+## Warning! This file is beeing auto-managed
+## Any manual changes can and will be overwritten!
+##
+
+[Unit]
+Requires=network.target statsd.service
+After=network.target statsd.service
+
+[Service]
+Type=simple
+User=root
+ExecStart={{ app_producer_home }}/bin/producer
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

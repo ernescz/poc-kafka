@@ -1,5 +1,5 @@
 ---
-# statsd service
+# statsd service:
 - name: restart statsd
   systemd:
     name: statsd
@@ -7,3 +7,10 @@
     state: restarted
     daemon_reload: True
 
+# Producer service:
+- name: restart producer
+  systemd:
+    name: producer
+    enabled: True
+    state: restarted
+    daemon_reload: True
