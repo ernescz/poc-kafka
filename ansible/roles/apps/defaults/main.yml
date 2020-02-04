@@ -1,0 +1,16 @@
+---
+## Producer app default values:
+app_producer_group: "producer"
+app_producer_user: "producer"
+app_producer_home: "/opt/producer"
+
+## Consumer app default values:
+app_consumer_group: "consumer"
+app_consumer_user: "consumer"
+app_consumer_home: "/opt/consumer"
+
+# systemd base location:
+systemd_confdir: "/etc/systemd/system"
+
+# statsd
+statsd_bin_root: "/usr/local/bin"

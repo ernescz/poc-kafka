@@ -1,0 +1,41 @@
+---
+# Create groups for both apps:
+- name: Apps | producer -> create group 
+  group:
+    name: "{{ app_producer_group }}"
+
+- name: Apps | consumer -> create group 
+  group:
+    name: "{{ app_consumer_group }}"
+
+# Create apps users:
+- name: Apps | producer -> create user
+  user:
+    name: "{{ app_producer_user }}"
+    group: "{{ app_producer_group }}"
+    comment: "User for producer app"
+    home: "{{ app_producer_home }}"
+
+- name: Apps | consumer -> create user
+  user:
+    name: "{{ app_consumer_user }}"
+    group: "{{ app_consumer_group }}"
+    comment: "User for consumer app"
+    home: "{{ app_consumer_home }}"
+
+# Make sure directories exit and belong to the correct user:
+- name: Apps | producer -> create base directory
+  file:
+    path: "{{ app_producer_home }}"
+    state: directory
+    owner: "{{ app_producer_user }}"
+    group: "{{ app_producer_group }}"
+    mode: 0755
+
+- name: Apps | consumer -> create base directory
+  file:
+    path: "{{ app_consumer_home }}"
+    state: directory
+    owner: "{{ app_consumer_user }}"
+    group: "{{ app_consumer_group }}"
+    mode: 0755

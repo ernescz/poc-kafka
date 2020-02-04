@@ -1,0 +1,20 @@
+---
+## statsd is used as an enpoint for application based metrics
+- name: Apps | statsd agent file upload
+  copy:
+    dest: "{{ statsd_bin_root }}/statsd_exporter"
+    src: "files/statsd_exporter"
+    owner: "root"
+    group: "root"
+    mode: 0755
+    
+# statsd systemd service:
+- name: Apps | statsd systemd file
+  template:
+    dest: "{{ systemd_confdir }}/statsd.service"
+    src: "etc/systemd/system/statsd.service.j2"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  notify: 
+    - restart statsd
