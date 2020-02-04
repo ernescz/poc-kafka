@@ -8,3 +8,4 @@
     - role: bootstrap
     - role: kafka
       kafka_jmx_disabled: False
+    - role: apps
