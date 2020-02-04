@@ -1,0 +1,9 @@
+---
+# statsd service
+- name: restart statsd
+  systemd:
+    name: statsd
+    enabled: True
+    state: restarted
+    daemon_reload: True
+

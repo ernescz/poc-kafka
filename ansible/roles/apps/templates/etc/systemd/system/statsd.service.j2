@@ -1,0 +1,19 @@
+##
+## statsd service (/etc/systemd/system/statsd.service)
+##
+## Warning! This file is beeing auto-managed
+## Any manual changes can and will be overwritten!
+##
+
+[Unit]
+Requires=network.target remote-fs.target
+After=network.target remote-fs.target
+
+[Service]
+Type=simple
+User=root
+ExecStart={{ statsd_bin_root }}/statsd_exporter
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
