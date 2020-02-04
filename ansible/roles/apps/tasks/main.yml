@@ -4,3 +4,4 @@
   block:
   - include_tasks: app_common.yml
   - include_tasks: app_statsd.yml
+  - include_tasks: app_producer.yml
