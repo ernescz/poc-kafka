@@ -52,6 +52,6 @@ def UnixConverter():
 
 
 # Start and daemonize the app:
-pid = "./unix_consumer.pid"
+pid = "/tmp/unix_consumer.pid"
 daemon = Daemonize(app="unix_consumer", pid=pid, action=UnixConverter)
 daemon.start()

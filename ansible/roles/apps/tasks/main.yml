@@ -2,6 +2,7 @@
 # See the included files (include_tasks) for additional info:
 - name: Apps | full setup
   block:
-  - include_tasks: app_common.yml
-  - include_tasks: app_statsd.yml
-  - include_tasks: app_producer.yml
+  # - include_tasks: app_common.yml
+  # - include_tasks: app_statsd.yml
+  # - include_tasks: app_producer.yml
+  - include_tasks: app_consumer.yml

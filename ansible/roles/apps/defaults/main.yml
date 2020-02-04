@@ -4,13 +4,26 @@ app_producer_group: "producer"
 app_producer_user: "producer"
 app_producer_home: "/opt/producer"
 
-## Consumer app default values:
+# Consumer app default values:
 app_consumer_group: "consumer"
 app_consumer_user: "consumer"
 app_consumer_home: "/opt/consumer"
+
+# Python3 requirements for consumer and pip (from IUS repository):
+app_consumer_python:
+  - python36u 
+  - python36u-libs 
+  - python36u-devel 
+  - python36u-pip
+  - python36-setuptools
+  - python-setuptools
+  - python36-virtualenv
 
 # systemd base location:
 systemd_confdir: "/etc/systemd/system"
 
 # statsd
 statsd_bin_root: "/usr/local/bin"
+
+# IUS repository:
+repo_ius_url: "https://centos7.iuscommunity.org/ius-release.rpm"

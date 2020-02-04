@@ -14,3 +14,11 @@
     enabled: True
     state: restarted
     daemon_reload: True
+
+# Consumer service:
+- name: restart consumer
+  systemd:
+    name: consumer
+    enabled: True
+    state: restarted
+    daemon_reload: True

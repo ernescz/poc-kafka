@@ -1,0 +1,54 @@
+---
+## Consumer application (written in Python3)
+# CentOS 7.x does not support Python 3.6 version, add IUS repository (https://ius.io/)
+- name: Apps | consumer -> add IUS repo
+  yum:
+    name: "{{ repo_ius_url }}"
+    state: present
+
+# Install python3 and dependencies:
+- name: Apps | consumer -> install Python 3.6
+  yum:
+    name: "{{ app_consumer_python }}"
+    state: present
+
+# Copy to remote the requirements file:
+- name: Apps | consumer -> copy requirements file
+  copy:
+    dest: "{{ app_consumer_home }}/requirements.txt"
+    src: "../../../apps/consumer/requirements.txt"
+
+# Install python3 virtualenv and packages for consumer:
+- name: Apps | consumer -> virtualenv creation
+  pip:
+    virtualenv: "{{ app_consumer_home }}/venv"
+    virtualenv_command: "virtualenv-3"
+    virtualenv_python: "python3.6"
+    requirements: "{{ app_consumer_home }}/requirements.txt"
+
+# Copy the consumer app:
+- name: Apps | consumer -> copy app
+  copy:
+    dest: "{{ app_consumer_home }}/consumer.py"
+    src: "../../../apps/consumer/consumer.py"
+    owner: "{{ app_consumer_user }}"
+    group: "{{ app_consumer_group }}"
+    mode: 0770
+
+# Consumer systemd service:
+- name: Apps | consumer -> systemd file
+  template:
+    dest: "{{ systemd_confdir }}/consumer.service"
+    src: "etc/systemd/system/consumer.service.j2"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  notify: 
+    - restart consumer
+
+# Make sure consumer is running:
+- name: Apps | consumer -> is running
+  systemd:
+    name: consumer
+    state: started
+    daemon_reload: False

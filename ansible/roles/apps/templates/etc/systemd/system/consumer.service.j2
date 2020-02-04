@@ -1,0 +1,20 @@
+##
+## consumer service (/etc/systemd/system/consumer.service)
+##
+## Warning! This file is beeing auto-managed
+## Any manual changes can and will be overwritten!
+##
+
+[Unit]
+Requires=network.target statsd.service
+After=network.target statsd.service
+
+[Service]
+Type=forking
+User={{ app_consumer_user }}
+ExecStart={{ app_consumer_home }}/venv/bin/python {{ app_consumer_home }}/consumer.py
+ExecStop=/bin/kill $(cat /tmp/unix_consumer.pid)
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
