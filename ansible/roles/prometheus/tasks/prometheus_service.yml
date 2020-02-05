@@ -1,0 +1,29 @@
+---
+# Prometheus service systemd file:
+- name: Prometheus | Prometheus systemd file
+  template:
+    dest: "{{ systemd_confdir }}/prometheus.service"
+    src: "etc/systemd/system/prometheus.service.j2"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  notify: 
+    - restart prometheus
+
+# Prometheus main configuration file:
+- name: Prometheus | manage main Prometheus configuration file
+  template:
+    dest: "{{ prometheus_base_directory }}/prometheus.yml"
+    src: "opt/prometheus/prometheus.yml.j2"
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: 0644
+  notify: 
+    - restart prometheus
+
+# Make sure Prometheus is running:
+- name: Prometheus | start Prometheus if down
+  systemd:
+    name: prometheus
+    state: started
+    daemon_reload: False

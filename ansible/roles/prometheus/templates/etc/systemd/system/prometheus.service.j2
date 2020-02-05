@@ -1,0 +1,24 @@
+##
+## Prometheus service ({{ systemd_confdir }}/prometheus.service)
+##
+## Warning! This file is beeing auto-managed
+## Any manual changes can and will be overwritten!
+##
+
+[Unit]
+Description=Prometheus monitoring
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User={{ prometheus_user }}
+Group={{ prometheus_group }}
+Type=simple
+ExecStart={{ prometheus_base_directory }}/prometheus/prometheus \
+  --config.file {{ prometheus_base_directory }}/prometheus.yml \
+  --storage.tsdb.path /var/lib/prometheus/ \
+  --web.console.templates={{ prometheus_base_directory }}/prometheus/consoles \
+  --web.console.libraries={{ prometheus_base_directory }}/prometheus/console_libraries
+
+[Install]
+WantedBy=multi-user.target

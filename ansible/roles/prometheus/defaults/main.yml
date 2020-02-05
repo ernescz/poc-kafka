@@ -1,0 +1,13 @@
+---
+# Locations for Promteheus
+prometheus_base_directory: "/opt/prometheus"
+prometheus_data_directory: "/var/lib/prometheus"
+
+# Promteheus user/group:
+prometheus_user: "prometheus"
+prometheus_group: "prometheus"
+
+# Promteheus download URL and version:
+prometheus_version: "2.15.2"
+prometheus_dl_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+
