@@ -1,20 +1,28 @@
 ---
 # Add EPEL repository:
-- name: Add EPEL repo
+- name: bootstrap | repo -> add EPEL repo
   yum_repository:
     name: epel
     description: EPEL YUM repo
     baseurl: "{{ epel_repo_url }}"
 
 # Add EPEL repo gpg key
-- name: Import EPEL GPG key
+- name: bootstrap | repo -> import EPEL GPG key
   rpm_key:
     key: "{{ epel_repo_gpg_key_url }}"
     state: present
 
 # Installing base packages (from defaults/main.yml)
-- name: Install base packages
+- name: bootstrap | packages -> install base packages
   yum:
     name: "{{ base_packages }}"
     state: present
 
+# Stop redundant services:
+- name: bootstrap | services -> disable redundant services
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+    enabled: False
+  with_items:
+    - postfix

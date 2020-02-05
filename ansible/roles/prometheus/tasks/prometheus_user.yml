@@ -1,0 +1,18 @@
+---
+# Create Prometheus group:
+- name: Prometheus | create group
+  group:
+    name: "{{ prometheus_group }}"
+
+# Create Prometheus user:
+- name: Prometheus | create user
+  user:
+    name: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    comment: "Default user for Prometheus service"
+    home: "{{ prometheus_base_directory }}"
+    append: True
+    groups: wheel 
+    create_home: True
+    shell: "/sbin/nologin"
+    skeleton: ""

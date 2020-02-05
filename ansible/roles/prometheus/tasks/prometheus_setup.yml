@@ -1,0 +1,38 @@
+---
+# Download Prometheus software:
+- name: Prometheus | download files
+  get_url:
+    url: "{{ prometheus_dl_url }}"
+    dest: "/tmp/prometheus-{{ prometheus_version }}.tar.gz"
+    mode: "0440"
+  # Source server sometimes drops the connection, do retries:
+  register: download_result
+  retries: 6
+  delay: 10
+  until: download_result is not failed
+
+# Extract to Prometheus directory:
+- name: Prometheus | extracting Prometheus
+  unarchive:
+    src: "/tmp/prometheus-{{ prometheus_version }}.tar.gz"
+    dest: "{{ prometheus_base_directory }}"
+    creates: "{{ prometheus_base_directory }}/prometheus-{{ prometheus_version }}.linux-amd64"
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    remote_src: True
+
+# Symlink to current version:
+- name: Prometheus | current version symlink
+  file:
+    state: link
+    src: "{{ prometheus_base_directory }}/prometheus-{{ prometheus_version }}.linux-amd64"
+    path: "{{ prometheus_base_directory }}/prometheus"
+
+# Create data directory for all the data:
+- name: Prometheus | data directory
+  file:
+    path: "{{ prometheus_data_directory }}"
+    state: directory
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: 0750
