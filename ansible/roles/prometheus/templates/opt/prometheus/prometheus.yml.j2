@@ -13,14 +13,14 @@ scrape_configs:
   # Self-scrape for metrics
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['192.168.100.11:9090']
+      - targets: ['192.168.100.14:9090']
 
   # Kafka status metrics (TO-DO: update this to correct IP):
   - job_name: 'kafka'
     static_configs:
-      - targets: ['192.168.100.11:7071']
+      - targets: ['192.168.100.10:7071']
   
   # statsd metrics target (both from producer and consumer):
   - job_name: 'statsd'
     static_configs:
-      - targets: ['192.168.100.10:9102']
+      - targets: ['192.168.100.12:9102']

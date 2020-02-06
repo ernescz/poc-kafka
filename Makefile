@@ -20,12 +20,12 @@ check_requirements: 	## Checks for system compatibility (vagrant version, networ
 		Current version: ${VAGRANT_VERSION} \nPlease setup version 2.2.7" ; \
 	fi 
 
-	$(eval NET_ACCESS := $(shell curl -s -f -I  https://dl.fedoraproject.org/pub/epel > /dev/null; echo $$?))
-	@if [ "${NET_ACCESS}" == "0" ]; then \
-		echo "${GRN}[OK]${NC} EPEL repository reachable" ; \
+	$(eval ANSIBLE_VERSION := $(shell ansible --version | grep -E "ansible\ 2\." | cut -f2 -d" " | cut -f1 -f2 -d"."))
+	@if [ "${ANSIBLE_VERSION}" == "2.9" ]; then \
+		echo "${GRN}[OK]${NC} Ansible version = ${ANSIBLE_VERSION}" ; \
 	else \
-		echo "${RED}[FAIL]${NC} could not connect to EPEL repository\n \
-		Please make sure network is reachable"; \
+		echo "${RED}[FAIL]${NC} Ansible version 2.9.x required \n \
+		Current version: ${ANSIBLE_VERSION} -> Untested on other versions, unexpected results possible." ; \
 	fi 
 
 	$(eval VBOX_VERSION := $(shell VBoxManage --version | cut -c 1-3))
@@ -36,14 +36,26 @@ check_requirements: 	## Checks for system compatibility (vagrant version, networ
 		Current version: ${VBOX_VERSION} -> Please note Vagrant v2.2.6 does not support virtualbox v6.1" ; \
 	fi 
 
+	$(eval NET_ACCESS := $(shell curl -s -f -I  https://dl.fedoraproject.org/pub/epel > /dev/null; echo $$?))
+	@if [ "${NET_ACCESS}" == "0" ]; then \
+		echo "${GRN}[OK]${NC} EPEL repository reachable" ; \
+	else \
+		echo "${RED}[FAIL]${NC} could not connect to EPEL repository\n \
+		Please make sure network is reachable"; \
+	fi 
+
 install_addons: ## Installs addons for vbox
 	@vagrant plugin install vagrant-vbguest
 	
-init:		## Deploys vagrant machines from the Vagrantfile
+create:		## Creates machines and runs full ansible deploy
 	@echo "${GRN}Launching vagrant...${NC}" 
 	@vagrant up 
+	@echo "${GRN}Checking ansible access to hosts...${NC}" 
+	@ansible -i ansible/inventory/hosts.yaml all -m ping
+	@echo "${GRN}Running full deploy...${NC}" 
+	@ansible-playbook -i ansible/inventory/hosts.yaml ansible/deploy.yaml --diff -v
 
 destroy:		## Destroys all created machines
 	@echo "${RED}Destorying the whole setup...${NC}" 
 	@vagrant destroy --parallel
-	@echo "${GRN}Completed.${NC}" 
+	@echo "${GRN}Completed. Run 'make create' to recreate again.${NC}" 
