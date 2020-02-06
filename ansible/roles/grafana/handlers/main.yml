@@ -1,0 +1,8 @@
+---
+# statsd service:
+- name: restart grafana
+  systemd:
+    name: grafana-server
+    enabled: True
+    state: restarted
+    daemon_reload: True

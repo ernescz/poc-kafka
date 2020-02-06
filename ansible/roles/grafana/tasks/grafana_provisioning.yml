@@ -1,0 +1,46 @@
+---
+## Datasources and dashboards are read and impored by Grafana on startup.
+# Create the Prometheus datasource configuration (requires Grafana restart):
+- name: Grafana | provision -> Prometheus datasource
+  template:
+    dest: "{{ grafana_provision_dir }}/datasources/prometheus.yaml"
+    src: "etc/grafana/provisioning/datasources/prometheus.yaml.j2"
+    owner: "root"
+    group: "{{ grafana_group }}"
+    mode: 0640
+  notify: 
+    - restart grafana
+
+# Create the main dashboards configuration file (requires Grafana restart):
+- name: Grafana | provision -> dashboards config file
+  template:
+    dest: "{{ grafana_provision_dir }}/dashboards/main.yaml"
+    src: "etc/grafana/provisioning/dashboards/main.yaml.j2"
+    owner: "root"
+    group: "{{ grafana_group }}"
+    mode: 0640
+  notify: 
+    - restart grafana
+
+# Create dashboards directory and set correct owner:
+- name: Grafana | provision -> create dashboards directory
+  file:
+    path: "{{ grafana_dashboard_src_dir }}"
+    state: directory
+    owner: "{{ grafana_user }}"
+    group: "{{ grafana_group }}"
+    mode: 0755
+
+## Dashboards (these cannot be handled with 'files' module because datasource is a variable)
+# Add JSON dashboards to 'var/lib/grafana/dashboards' to be auto-provisioned (no Grafana restart needed):
+- name: Grafana | provision -> all dashboards
+  template:
+    dest: "{{ grafana_dashboard_src_dir }}/{{ item }}.json"
+    src: "var/lib/grafana/dashboards/{{ item }}.json.j2"
+    owner: "{{ grafana_user }}"
+    group: "{{ grafana_group }}"
+    mode: 0640
+  loop:
+    - apps
+    - kafka
+  

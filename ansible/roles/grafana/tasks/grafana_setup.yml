@@ -1,0 +1,40 @@
+---
+# Enable Grafana repo:
+- name: Grafana | add Grafana repo
+  yum_repository:
+    name: grafana
+    description: Grafana official repo
+    baseurl: "{{ grafana_repo_url }}"
+
+# Add EPEL repo gpg key
+- name: Grafana | add Grafana repo GPG key
+  rpm_key:
+    key: "{{ grafana_repo_key }}"
+    state: present
+
+# Install Grafana:
+- name: Grafana | install Grafana package from official repo
+  yum:
+    name: "grafana"
+    state: present
+  notify: 
+    - restart grafana
+
+# Create main config file:
+- name: Grafana | main Grafana configuration file
+  template:
+    dest: "{{ grafana_conf_dir }}/grafana.ini"
+    src: "etc/grafana/grafana.ini.j2"
+    owner: "{{ grafana_user }}"
+    group: "{{ grafana_group }}"
+    mode: 0644
+  notify: 
+    - restart grafana
+
+# Start the Grafana service if it's down:
+- name: Grafana | start Grafana if down
+  systemd:
+    name: grafana-server
+    state: started
+    enabled: True
+    daemon_reload: False

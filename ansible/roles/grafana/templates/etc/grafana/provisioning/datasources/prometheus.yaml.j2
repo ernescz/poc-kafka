@@ -1,0 +1,20 @@
+##
+## Grafana provisioned datasources ({{ grafana_provision_dir }}/datasources/prometheus.yaml)
+##
+## Warning! This file is beeing auto-managed
+## Any manual changes can and will be overwritten!
+##
+
+apiVersion: 1
+
+deleteDatasources:
+  # Remove outdated test datasource:
+  - name: prom-auto
+    orgId: 1
+
+datasources:
+  # Main Prometheus as a source:
+  - name: {{ grafana_datasource_name }}
+    type: prometheus
+    access: proxy
+    url: http://192.168.100.11:9090
