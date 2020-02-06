@@ -13,7 +13,7 @@
     mode: "0440"
   # Source server sometimes drops the connection, do retries:
   register: download_result
-  retries: 6
+  retries: 20
   delay: 10
   until: download_result is not failed
 
