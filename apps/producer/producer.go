@@ -24,7 +24,11 @@ func publishMessage() {
 	// Configurations settings:
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
-	config.Producer.Retry.Max = 5
+	// Due to Kafka slow startup 'producer' shuts down as no brokers are available
+	// Bump max retries from 3 to 30
+	config.Metadata.Retry.Max = 30
+	// Increase timeout between retries from 250ms to 10 seconds
+	config.Metadata.Retry.Backoff = 10000000000
 	config.Producer.Return.Successes = true
 	config.ClientID = "theProducer"
 
