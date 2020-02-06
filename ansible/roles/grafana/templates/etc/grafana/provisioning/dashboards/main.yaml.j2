@@ -1,0 +1,24 @@
+##
+## Grafana provisioned dashboards ({{ grafana_provision_dir }}/dashboards/main.yaml)
+##
+## Warning! This file is beeing auto-managed
+## Any manual changes can and will be overwritten!
+##
+
+apiVersion: 1
+
+providers:
+# Prometheus dashboards from "{{ grafana_datasource_name }}" datasource
+- name: '{{ grafana_datasource_name }}'
+  orgId: 1
+  # <string, required> name of the dashboard folder. Required
+  folder: 'auto-dashboards'
+  # <string> folder UID. will be automatically generated if not specified
+  folderUid: ''
+  type: file
+  disableDeletion: false
+  editable: true
+  updateIntervalSeconds: 30
+  allowUiUpdates: false
+  options:
+    path: {{ grafana_dashboard_src_dir }}

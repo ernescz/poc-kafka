@@ -1,0 +1,26 @@
+---
+# Grafana repo settings:
+grafana_repo_url: "https://packages.grafana.com/oss/rpm"
+grafana_repo_key: "https://packages.grafana.com/gpg.key"
+
+# Grafana configuration directory:
+grafana_conf_dir: "/etc/grafana"
+
+# Grafana location for provisioning dashboards and datasources
+grafana_provision_dir: "{{ grafana_conf_dir }}/provisioning"
+
+# Grafana system user and group (not the web admin):
+grafana_user: "grafana"
+grafana_group: "grafana"
+
+# Grafana GUI admin user (not the Linux system user):
+# (N.B. pass value should be moved to Ansible vault in production environment)
+grafana_gui_adm_usr: "admin"
+grafana_gui_adm_pass: "pocAdmin"
+
+# Grafana default datasource name (Prometheus):
+grafana_datasource_name: "prometheus-auto"
+
+# Location for Grafana dashboards (should not be the same as "grafana_provision_dir"):
+# From here Grafana will read and import any dashboards that are place there (without service restart)
+grafana_dashboard_src_dir: "/var/lib/grafana/dashboards"
