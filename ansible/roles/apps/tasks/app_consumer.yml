@@ -34,7 +34,9 @@
     owner: "{{ app_consumer_user }}"
     group: "{{ app_consumer_group }}"
     mode: 0770
-
+  notify: 
+    - restart consumer
+    
 # Consumer systemd service:
 - name: Apps | consumer -> systemd file
   template:

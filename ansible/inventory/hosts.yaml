@@ -1,12 +1,28 @@
-apps:
+# Hosts that have the Kafka service:
+kafka_all:
   hosts:
-    app-01: &app-01
-      ansible_host: '192.168.100.11'
-      ansible_ssh_private_key_file: ./.vagrant/machines/date_app/virtualbox/private_key
+    kafka: &kafka
+      ansible_host: '192.168.100.10'
+      ansible_ssh_private_key_file: ./.vagrant/machines/kafka/virtualbox/private_key
 
+# Hosts with applications (consumer/producer) running:
+apps_all:
+  hosts:
+    apps: &apps
+      ansible_host: '192.168.100.12'
+      ansible_ssh_private_key_file: ./.vagrant/machines/apps/virtualbox/private_key
+
+# Monitoring hosts for Prometheus and Grafana:
+monitoring_all:
+  hosts:
+    monitoring: &monitoring
+      ansible_host: '192.168.100.14'
+      ansible_ssh_private_key_file: ./.vagrant/machines/monitoring/virtualbox/private_key
+
+# General variables:
 all:
   vars:
     ansible_port: 22
     ansible_user: vagrant
-    # ansible_ssh_private_key_file: ./.vagrant/machines/date_app/virtualbox/private_key
-
+    # Location for the main systemd services directory:
+    systemd_confdir: "/etc/systemd/system"

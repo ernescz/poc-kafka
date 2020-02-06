@@ -31,7 +31,7 @@ def UnixConverter():
     )
 
   # statsd connectors for pushing app metrics:
-  statsd_cli = statsd.StatsClient('192.168.100.10', 9125, prefix="consumer")
+  statsd_cli = statsd.StatsClient('192.168.100.12', 9125, prefix="consumer")
 
   # Process the messages in topic:
   for message in consumer:

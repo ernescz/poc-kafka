@@ -43,7 +43,7 @@ func publishMessage() {
 
 	// statsd initialization:
 	prefix := "producer."
-	statsdclient := statsd.NewStatsdClient("192.168.100.10:9125", prefix)
+	statsdclient := statsd.NewStatsdClient("192.168.100.12:9125", prefix)
 	statsdErr := statsdclient.CreateSocket()
 
 	if statsdErr != nil {

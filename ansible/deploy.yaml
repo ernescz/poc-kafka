@@ -1,11 +1,40 @@
 ---
-- name: Bootstrap
+# Bootstrap role - basic maintenance and packages (see role for more info):
+- name: Bootstrap 
   hosts: all
   become: True
   become_method: sudo
   gather_facts: False
   roles:
     - role: bootstrap
+    
+# Deploy Kafka service to the target host:
+- name: Deploy Kafka
+  hosts: kafka
+  become: True
+  become_method: sudo
+  gather_facts: False
+  roles:
     - role: kafka
       kafka_jmx_disabled: False
+
+# Deploy Apps (producer/consumer) service:
+- name: Deploy Apps
+  hosts: apps
+  become: True
+  become_method: sudo
+  gather_facts: False
+  roles:
     - role: apps
+    # - role: prometheus
+    # - role: grafana
+
+# Deploy monitoring Prometheus/Grafana:
+- name: Deploy Monitoring
+  hosts: monitoring
+  become: True
+  become_method: sudo
+  gather_facts: False
+  roles:
+    - role: prometheus
+    - role: grafana
